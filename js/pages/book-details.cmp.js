@@ -42,7 +42,7 @@ export default {
 
     data() {
         return {
-            salePath: '../../img/sale.png',
+            salePath: './img/sale.png',
             showLess: true,
             book: null,
             car: null,
@@ -72,9 +72,10 @@ export default {
     },
     computed: {
         pageCount() {
-            if (this.book.pageCount > 500) return 'Long reading';
-            else if (this.book.pageCount > 200) return 'Decent reading';
-            else if (this.book.pageCount > 100) return 'Light reading';
+            let { pageCount } = this.book
+            if (pageCount > 500) return 'Long reading';
+            else if (pageCount > 200) return 'Decent reading';
+            else if (pageCount > 100) return 'Light reading';
         },
         publishedDate() {
             const currYear = new Date().getFullYear();

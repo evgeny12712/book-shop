@@ -2,10 +2,9 @@ export default {
     props: ['txt'],
     template: `
     <div>
-    <p>{{textForDisplay}} <span v-if="!expandText && isLongTxt">...</span></p>
-    <button  class="details-btn" v-if="isLongTxt" @click="toggleText">{{textButton}}</button>
-    
-</div>
+     <p>{{textForDisplay}} </p>
+    <button  class="details-btn" v-if="txt.length > 100" @click="expandText = !expandText">{{textButton}}</button>
+    </div>
     `,
     data() {
         return {
@@ -20,14 +19,20 @@ export default {
     },
     computed: {
         textForDisplay() {
-            return this.expandText ? this.txt : this.txt.slice(0, 100)
+            if (this.expandText) {
+                return this.txt
+            } else {
+                if (this.txt.length > 100) return this.txt.slice(0, 100) + '...'
+                else return this.txt
+            }
+            // return this.expandText && this.txt.length < 100 ? this.txt : this.txt.slice(0, 100)
         },
         textButton() {
             return this.expandText ? 'less' : 'more'
         },
-        isLongTxt() {
-            return this.txt.length > 100
-        }
+        // isLongTxt() {
+        //     return this.txt.length > 100
+        // }
     }
 
 }

@@ -5,7 +5,7 @@ export default {
     template: `
         <ul class="book-list">
             <li v-for="book in books" :key="book.id" class="book-preview-container" >
-                <book-preview :book="book"  @click.native="select(book.id)" />
+                <book-preview :book="book" />
                 <router-link :to="'/book/' + book.id">Details</router-link>
             </li>
         </ul>
