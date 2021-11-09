@@ -5,6 +5,7 @@ import showReview from '../cmps/show-review.cmp.js';
 import { eventBus } from "../services/event-bus-service.js";
 
 export default {
+    name: 'book-details',
     template: `
         <section v-if="book" class="book-details">
             <img :src="book.thumbnail">
@@ -36,29 +37,25 @@ export default {
             <button class="details-btn" @click="isAddReview = !isAddReview">Add review</button>
             <review-add class='review-add' v-if="isAddReview" @addReview="addReview"></review-add>
             <router-link to='/book' class="back-btn">X</router-link>
-
+            <section class='pages'>
+            <router-link :to="'/book/' + prevBookId">< Prev book </router-link>
+            <router-link :to="'/book/' + nextBookId">Next book > </router-link>
+            </section>
         </section>
     `,
 
     data() {
         return {
             salePath: './img/sale.png',
-            showLess: true,
             book: null,
-            car: null,
             isAddReview: false,
-            isShowReviews: false
+            isShowReviews: false,
+            nextBookId: 0,
+            prevBookId: 0,
         }
     },
-    created() {
-        const bookId = this.$route.params.bookId;
-        const book = bookService.getById(bookId);
-        book.then((book) => this.book = book);
-    },
+    created() {},
     methods: {
-        toggleTxt() {
-            this.showLess = !this.showLess
-        },
         addReview(book, review) {
             this.book = book;
             bookService.addReview(this.book, review)
@@ -68,6 +65,24 @@ export default {
                     eventBus.$emit('showMsg', msg);
                 })
 
+        },
+        pageDirection(direction) {
+            this.direction = direction;
+        }
+    },
+    watch: {
+        '$route.params.bookId': {
+            handler() {
+                const bookId = this.$route.params.bookId;
+                bookService.getById(bookId)
+                    .then((book) => this.book = book)
+                bookService.besidePageIdx(bookId, 1)
+                    .then(bookId => this.nextBookId = bookId);
+                bookService.besidePageIdx(bookId, -1)
+                    .then(bookId => this.prevBookId = bookId);
+
+            },
+            immediate: true
         }
     },
     computed: {

@@ -18,14 +18,6 @@ const routes = [{
         path: '/book/:bookId',
         component: bookDetails
     }
-    // {
-    //     path: '/car/edit/:carId?',
-    //     component: carEdit
-    // },
-    // {
-    //     path: '/car/:carId',
-    //     component: carDetails
-    // },
 ];
 
 export const router = new VueRouter({ routes });

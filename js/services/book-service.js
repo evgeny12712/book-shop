@@ -7,7 +7,9 @@ export const bookService = {
     query,
     getById,
     addReview,
-    save
+    save,
+    addGoogleBook,
+    besidePageIdx
 };
 
 function query() {
@@ -26,6 +28,35 @@ function addReview(book, review) {
 
 function save(book) {
     return storageService.put(BOOKS_KEY, book);
+}
+
+function addGoogleBook(googleBook) {
+    let book = {
+        id: utilService.makeId(),
+        title: googleBook.volumeInfo.title,
+        subtitle: googleBook.volumeInfo.subtitle,
+        authors: googleBook.volumeInfo.authors,
+        description: googleBook.volumeInfo.description,
+        publishedDate: googleBook.volumeInfo.publishedDate,
+        pageCount: googleBook.volumeInfo.pageCount,
+        listPrice: { amount: utilService.getRandomInt(1, 200), isOnSale: Math.random < 0.5 },
+        thumbnail: 'https://picsum.photos/200/300',
+    }
+    return save(book);
+}
+
+function besidePageIdx(currBookId, direction) {
+    return query()
+        .then(books => {
+            const idx = books.findIndex(book => book.id === currBookId);
+            if (direction === -1) {
+                if (idx === 0) return books[books.length - 1].id;
+                return books[idx - 1].id;
+            } else if (direction === 1) {
+                if (idx === books.length - 1) return books[0].id;
+                return books[idx + 1].id;
+            }
+        });
 }
 
 function _createBooks() {
